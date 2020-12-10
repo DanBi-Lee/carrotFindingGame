@@ -11,6 +11,7 @@
 html, body {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 button {
@@ -46,9 +47,21 @@ body {
     -moz-user-select: none;
 }
 
+.item-render-box{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 5;
+}
+
 .background-image{
     width: 100%;
     height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
 .btn-box{
@@ -107,4 +120,13 @@ body {
     color: #fff;
     background-color: #fd7e14;
     text-align: center;
+}
+
+.carrot, .bug {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+.carrot:hover {
+    transform: scale(1.2);
 }

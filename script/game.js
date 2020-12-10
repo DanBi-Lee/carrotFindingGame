@@ -1,4 +1,8 @@
 let isGaming = false;
+const $wrap = document.querySelector('.wrap');
+const $timer = document.querySelector('.timer');
+const $itemCounter = document.querySelector('.item-counter');
+const $itemRenderBox = document.querySelector('.item-render-box');
 
 function preloadImage(items){
     const result = {}
@@ -45,17 +49,66 @@ function setData(){
     return result;
 }
 
+function countDown(time){
+    const result = setInterval(()=>{
+        time --;
+        $timer.innerText = `00:${time>=10?time:`0${time}`}`;
+        if(time === 0){
+            clearInterval(result);
+            return;
+        }
+    }, 1000);
+    return result;
+}
+
+function renderItem(item, count, size){
+    const width = $wrap.clientWidth;
+    const height = ($wrap.clientHeight / 2);
+    item.width = size;
+    item.hieght = size;
+
+    for(let index = 0; index < count; index++){
+        const $copyImg = item.cloneNode();
+        const randomX = Math.random()*(width-item.width);
+        const randomY = (Math.random()*(height-item.hieght))+height;
+        $copyImg.style.left = `${randomX}px`;
+        $copyImg.style.top = `${randomY}px`;
+        $itemRenderBox.append($copyImg);
+    }
+}
+
 function startGame(data){
     isGaming = true;
     console.log('게임시작');
-    // data.preloadSrc.audioList.bg.loop = true;
-    // data.preloadSrc.audioList.bg.play();
+
+    // 백그라운드 뮤직
+    const backgroundMusic = data.preloadSrc.audioList.bg;
+    backgroundMusic.loop = true;
+    backgroundMusic.play();
+
+    // 타이머 돌아가기
+    let time = data.gameData.time;
+    $timer.innerText = '00:10';
+    const timer = countDown(time);
+
+    // 당근 갯수 화면에 뿌리기
+    const carrotCount = data.gameData.item.carrot;
+    $itemCounter.innerText = carrotCount;
+
+    // 당근, 벌레 뿌리기
+    $itemRenderBox.innerHTML = '';
+    const carrot = data.preloadSrc.imageList.carrot;
+    const bug =  data.preloadSrc.imageList.bug;
+    carrot.classList.add('carrot');
+    bug.classList.add('bug');
+    renderItem(carrot, carrotCount, 50);
+    renderItem(bug, data.gameData.item.bug, 40);
 }
 
 function stopGame(data){
     isGaming = false;
     console.log('게임 일시정지');
-    // data.preloadSrc.audioList.bg.pause();
+    data.preloadSrc.audioList.bg.pause();
 }
 
 function handlingStargBtn(data){
