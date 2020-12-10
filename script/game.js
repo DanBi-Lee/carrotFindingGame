@@ -1,3 +1,5 @@
+let isGaming = false;
+
 function preloadImage(items){
     const result = {}
     for (let item in items){
@@ -43,9 +45,49 @@ function setData(){
     return result;
 }
 
+function startGame(data){
+    isGaming = true;
+    console.log('게임시작');
+    // data.preloadSrc.audioList.bg.loop = true;
+    // data.preloadSrc.audioList.bg.play();
+}
+
+function stopGame(data){
+    isGaming = false;
+    console.log('게임 일시정지');
+    // data.preloadSrc.audioList.bg.pause();
+}
+
+function handlingStargBtn(data){
+    const $btnBox = document.querySelector('.btn-box');
+    const $startBtn = $btnBox.querySelector('.btn-start');
+    const $stopBtn = $btnBox.querySelector('.btn-stop');
+
+    $btnBox.addEventListener('click', e => {
+        if (e.target.nodeName !== 'BUTTON'){
+            return;
+        }
+        switch(e.target.dataset.type){
+            case 'start' :
+                startGame(data);
+                $startBtn.style.zIndex = 0;
+                $stopBtn.style.zIndex = 10;
+                break;
+            case 'stop' :
+                stopGame(data);
+                $startBtn.style.zIndex = 10;
+                $stopBtn.style.zIndex = 0;
+                break;
+            default :
+                throw new Error('정의되지않은 data-type입니다.');
+        }
+    });
+}
+
 function setGame(){
     const preloadSrc = preload();
     const gameData = setData();
+    handlingStargBtn({preloadSrc, gameData});
 }
 
 function init(){

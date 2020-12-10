@@ -51,17 +51,29 @@ body {
     height: 100%;
 }
 
-.btn {
+.btn-box{
     position: absolute;
     width: 40px;
     height: 40px;
     top: 20px;
     left: 50%;
     margin-left: -20px;
+}
+
+.btn {
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    top: 0px;
+    left: 0px;
     border: 2px solid;
     border-radius: 4px;
     background: #ffd8a8;
     font-size: 18px;
+}
+
+.btn i {
+    pointer-events: none;
 }
 
 .btn-start {

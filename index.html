@@ -12,14 +12,16 @@
 <body>
     <section class="wrap">
         <img src="img/background.png" alt="배경" class="background-image">
-        <button class="btn-start btn">
-            <i class="fas fa-play"></i>
-            <span class="hidden">게임 시작하기</span>
-        </button>
-        <button class="btn-stop btn">
-            <i class="fas fas fa-stop"></i>
-            <span class="hidden">게임 멈추기</span>
-        </button>
+        <div class="btn-box">
+            <button class="btn-start btn" data-type="start">
+                <i class="fas fa-play"></i>
+                <span class="hidden">게임 시작하기</span>
+            </button>
+            <button class="btn-stop btn" data-type="stop">
+                <i class="fas fas fa-stop"></i>
+                <span class="hidden">게임 멈추기</span>
+            </button>
+        </div>
         <p class="timer">
             00:00
         </p>
