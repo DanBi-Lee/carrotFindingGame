@@ -1,4 +1,5 @@
 let isGaming = false;
+let timer;
 const $wrap = document.querySelector('.wrap');
 const $timer = document.querySelector('.timer');
 const $itemCounter = document.querySelector('.item-counter');
@@ -89,7 +90,7 @@ function startGame(data){
     // 타이머 돌아가기
     let time = data.gameData.time;
     $timer.innerText = '00:10';
-    const timer = countDown(time);
+    timer = countDown(time);
 
     // 당근 갯수 화면에 뿌리기
     const carrotCount = data.gameData.item.carrot;
@@ -107,8 +108,15 @@ function startGame(data){
 
 function stopGame(data){
     isGaming = false;
-    console.log('게임 일시정지');
+    // 백그라운드 뮤직 멈추기
     data.preloadSrc.audioList.bg.pause();
+
+    // 타이머 멈추기
+    clearInterval(timer);
+    $timer.innerText = '00:00';
+
+    // 당근, 벌레 지우기
+    $itemRenderBox.innerHTML = '';
 }
 
 function handlingStargBtn(data){
@@ -153,9 +161,9 @@ function init(){
             - 시간 v
             - 몇마리 나올지(당근, 벌레) v
         - 게임 시작버튼 조작
-            - 진행중 멈춤
-            - 진행중이 아니면 시작
-                - 당근과 벌레 랜덤배치
+            - 진행중 멈춤 v
+            - 진행중이 아니면 시작 v
+                - 당근과 벌레 랜덤배치 v
                 - 랜덤배치된 당근 클릭시 사라짐 (몇마리 숫자 카운트 다운)
                 - 클릭 시점
                     - 벌레면 : 실패
