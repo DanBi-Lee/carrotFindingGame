@@ -1,5 +1,7 @@
 let isGaming = false;
+let isGameClear = false;
 let timer;
+let gameData, preloadSrc;
 const $wrap = document.querySelector('.wrap');
 const $timer = document.querySelector('.timer');
 const $itemCounter = document.querySelector('.item-counter');
@@ -56,6 +58,7 @@ function countDown(time){
         $timer.innerText = `00:${time>=10?time:`0${time}`}`;
         if(time === 0){
             clearInterval(result);
+            gameOver();
             return;
         }
     }, 1000);
@@ -78,8 +81,58 @@ function renderItem(item, count, size){
     }
 }
 
+function gameClear(){
+    console.log('승리!');
+    preloadSrc.audioList.game_win.play();
+    stopGame();
+}
+
+function checkGameClear(carrotCount){
+    console.log(carrotCount);
+    const result = carrotCount <= 0? true : false;
+    return result;
+}
+
+function gameOver(){
+    preloadSrc.audioList.alet.play();
+    console.log('실패 화면 띄우기!');
+    stopGame();
+}
+
+function playingTheGame(e){
+    const target = e.target;
+    if(target.nodeName !== "IMG"){
+        return;
+    }
+    const targetType = target.className;
+    switch(targetType){
+        case 'carrot' :
+            console.log('당근뺴기');
+            let carrotCount = --gameData.item.carrot;
+            target.remove();
+            $itemCounter.innerHTML = carrotCount;
+            const cloneAudio = preloadSrc.audioList.carrot_pull.cloneNode();
+            cloneAudio.play();
+
+            isGameClear = checkGameClear(carrotCount);
+            
+            console.log(isGameClear);
+            if(isGameClear){
+                gameClear();
+            }
+            break;
+        case 'bug' :
+            preloadSrc.audioList.bug_pull.play();
+            gameOver();
+            break;
+        default :
+            throw new Error('정의되지 않은 타입');
+    }
+}
+
 function startGame(data){
     isGaming = true;
+    gameData = setData();
     console.log('게임시작');
 
     // 백그라운드 뮤직
@@ -88,12 +141,12 @@ function startGame(data){
     backgroundMusic.play();
 
     // 타이머 돌아가기
-    let time = data.gameData.time;
+    let time = gameData.time;
     $timer.innerText = '00:10';
     timer = countDown(time);
 
     // 당근 갯수 화면에 뿌리기
-    const carrotCount = data.gameData.item.carrot;
+    const carrotCount = gameData.item.carrot;
     $itemCounter.innerText = carrotCount;
 
     // 당근, 벌레 뿌리기
@@ -103,13 +156,16 @@ function startGame(data){
     carrot.classList.add('carrot');
     bug.classList.add('bug');
     renderItem(carrot, carrotCount, 50);
-    renderItem(bug, data.gameData.item.bug, 40);
+    renderItem(bug, gameData.item.bug, 40);
+
+    // 당근, 벌레 클릭 이벤트 등록
+    $itemRenderBox.addEventListener('click', playingTheGame);
 }
 
-function stopGame(data){
+function stopGame(){
     isGaming = false;
     // 백그라운드 뮤직 멈추기
-    data.preloadSrc.audioList.bg.pause();
+    preloadSrc.audioList.bg.pause();
 
     // 타이머 멈추기
     clearInterval(timer);
@@ -117,6 +173,9 @@ function stopGame(data){
 
     // 당근, 벌레 지우기
     $itemRenderBox.innerHTML = '';
+
+    // 당근, 벌레 클릭 이벤트 삭제
+    $itemRenderBox.removeEventListener('click', playingTheGame);
 }
 
 function handlingStargBtn(data){
@@ -135,7 +194,7 @@ function handlingStargBtn(data){
                 $stopBtn.style.zIndex = 10;
                 break;
             case 'stop' :
-                stopGame(data);
+                stopGame();
                 $startBtn.style.zIndex = 10;
                 $stopBtn.style.zIndex = 0;
                 break;
@@ -146,9 +205,8 @@ function handlingStargBtn(data){
 }
 
 function setGame(){
-    const preloadSrc = preload();
-    const gameData = setData();
-    handlingStargBtn({preloadSrc, gameData});
+    preloadSrc = preload();
+    handlingStargBtn({preloadSrc});
 }
 
 function init(){
