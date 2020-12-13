@@ -130,3 +130,24 @@ body {
 .carrot:hover {
     transform: scale(1.2);
 }
+
+.popup {
+    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: 80px;
+    transform: translateX(-50%);
+    text-align: center;
+    padding: 10px 40px;
+    background-color: rgba(0,0,0,0.8);
+    color: #fff;
+    border-radius: 8px;
+    z-index : 10;
+}
+
+.popup .replay{
+    position: relative;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 4px;
+}

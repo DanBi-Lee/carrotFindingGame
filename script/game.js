@@ -3,9 +3,15 @@ let isGameClear = false;
 let timer;
 let gameData, preloadSrc;
 const $wrap = document.querySelector('.wrap');
+const $btnBox = document.querySelector('.btn-box');
+const $startBtn = $btnBox.querySelector('.btn-start');
+const $stopBtn = $btnBox.querySelector('.btn-stop');
 const $timer = document.querySelector('.timer');
 const $itemCounter = document.querySelector('.item-counter');
 const $itemRenderBox = document.querySelector('.item-render-box');
+const $popup = document.querySelector('.popup');
+const $replay = $popup.querySelector('.replay');
+const $message = $popup.querySelector('.game-message');
 
 function preloadImage(items){
     const result = {}
@@ -81,9 +87,16 @@ function renderItem(item, count, size){
     }
 }
 
+function popup(message){
+    $popup.style.display = 'block';
+    $message.innerText = message;
+    $btnBox.style.display = 'none';
+}
+
 function gameClear(){
-    console.log('승리!');
     preloadSrc.audioList.game_win.play();
+    // 승리화면 띄우기
+    popup('승리하셨습니다 🎈');
     stopGame();
 }
 
@@ -95,7 +108,8 @@ function checkGameClear(carrotCount){
 
 function gameOver(){
     preloadSrc.audioList.alet.play();
-    console.log('실패 화면 띄우기!');
+    // 실패화면 띄우기
+    popup('패배하셨습니다 😂');
     stopGame();
 }
 
@@ -178,11 +192,7 @@ function stopGame(){
     $itemRenderBox.removeEventListener('click', playingTheGame);
 }
 
-function handlingStargBtn(data){
-    const $btnBox = document.querySelector('.btn-box');
-    const $startBtn = $btnBox.querySelector('.btn-start');
-    const $stopBtn = $btnBox.querySelector('.btn-stop');
-
+function handlingGameBtn(data){
     $btnBox.addEventListener('click', e => {
         if (e.target.nodeName !== 'BUTTON'){
             return;
@@ -202,34 +212,20 @@ function handlingStargBtn(data){
                 throw new Error('정의되지않은 data-type입니다.');
         }
     });
+    $replay.addEventListener('click', ()=>{
+        startGame({preloadSrc});
+        $popup.style.display = 'none';
+        $btnBox.style.display = 'block';
+    });
 }
 
 function setGame(){
     preloadSrc = preload();
-    handlingStargBtn({preloadSrc});
+    handlingGameBtn({preloadSrc});
 }
 
 function init(){
     setGame();
-    /*
-    1. 게임준비
-        - 이미지 준비 v
-        - 사운드 준비 v
-        - 데이터 준비 v
-            - 시간 v
-            - 몇마리 나올지(당근, 벌레) v
-        - 게임 시작버튼 조작
-            - 진행중 멈춤 v
-            - 진행중이 아니면 시작 v
-                - 당근과 벌레 랜덤배치 v
-                - 랜덤배치된 당근 클릭시 사라짐 (몇마리 숫자 카운트 다운)
-                - 클릭 시점
-                    - 벌레면 : 실패
-                    - 당근이면 : 계속 진행
-                - 타임 오버 : 실패
-                - 게임이 끝나면 실패/성공 여부와 리플레이 버튼이 뜸
-                - 리플레이 누르면 게임 데이터 초기화 하고 게임 시작
-     */
 }
 
 init();
