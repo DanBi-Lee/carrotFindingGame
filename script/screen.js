@@ -1,6 +1,7 @@
 window.addEventListener('load', ()=>{
     const $body = document.querySelector('body');
     const $wrap = document.querySelector('.wrap');
+    const $fullscreenPopup = document.querySelector('.fullscreen-popup');
     let browserWidth = window.innerWidth;
     let browserHeight = window.innerHeight;
     const IMAGE_WIDTH = $wrap.clientWidth;
@@ -8,6 +9,7 @@ window.addEventListener('load', ()=>{
     const IMAGE_RATE = IMAGE_WIDTH/IMAGE_HEIGHT;
     let isMobile = false;
     let isPortrait = false;
+    let ismobileLandscapeMode = false;
     
     function setBackground(ismobileLandscapeMode){
         browserWidth = window.innerWidth;
@@ -31,16 +33,27 @@ window.addEventListener('load', ()=>{
     
     function screenRatio(ismobileLandscapeMode){
         window.addEventListener('resize',function (){
+            if(isMobile){
+                ismobileLandscapeMode = checkMobileLandscapeMode();
+                addLandscapeClass(ismobileLandscapeMode);
+            }
             setBackground(ismobileLandscapeMode);
         })
         setBackground(ismobileLandscapeMode);
+    }
+
+    function addLandscapeClass(ismobileLandscapeMode){
+        if(ismobileLandscapeMode){
+            $body.classList.add('landscape');
+        }else{
+            $body.classList.remove('landscape');
+        }
     }
 
     function checkMobileLandscapeMode(){
         isMobile = /iPhone|iPad|iPod|Android|Mobile/i.test(navigator.userAgent);
         isPortrait = window.outerWidth < window.outerHeight;
         if(isMobile && isPortrait){
-            $body.classList.add('landscape');
             return true;
         }else{
             return false;
@@ -48,7 +61,8 @@ window.addEventListener('load', ()=>{
     }
 
     function init(){
-        const ismobileLandscapeMode = checkMobileLandscapeMode();
+        ismobileLandscapeMode = checkMobileLandscapeMode();
+        addLandscapeClass(ismobileLandscapeMode);
         screenRatio(ismobileLandscapeMode);
     }
     
