@@ -38,18 +38,18 @@ window.addEventListener('load', ()=>{
 
     function checkMobileLandscapeMode(){
         isMobile = /iPhone|iPad|iPod|Android|Mobile/i.test(navigator.userAgent);
-        isPortrait = window.outerWidth < window.outerHeigh;
+        isPortrait = window.outerWidth < window.outerHeight;
         if(isMobile && isPortrait){
             $body.classList.add('landscape');
             return true;
         }else{
+            return false;
         }
     }
 
     function init(){
-        const ismobileLandscapeMode = checkMobileLandscapeMode()
+        const ismobileLandscapeMode = checkMobileLandscapeMode();
         screenRatio(ismobileLandscapeMode);
-
     }
     
     init();
